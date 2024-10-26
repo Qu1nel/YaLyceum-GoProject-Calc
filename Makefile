@@ -11,6 +11,17 @@ RESET	:= \\033[0m
 
 export GOFLAGS="-buildvcs=false"
 
+OS := $(shell uname)
+
+ifeq ($(OS),Linux)
+    BINARY := bin/calc
+else ifeq ($(OS),Darwin)
+    BINARY := bin/calc
+else
+    BINARY := bin/calc.exe
+endif
+
+ENTRY_POINT=./cmd/main.go
 
 # Main
 ##############################################################################
@@ -20,6 +31,9 @@ export GOFLAGS="-buildvcs=false"
 run: install-dep  ## Launch app (main.go)
 	go run ./cmd/main.go
 
+.PHONY: build-run
+build-run:  ## Launch build app (int ./bin)
+	./$(BINARY)
 
 .PHONY: install-dep
 install-dep:  ## Install tools for dev
@@ -27,6 +41,16 @@ install-dep:  ## Install tools for dev
 	go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
 	go install -v github.com/go-critic/go-critic/cmd/gocritic@latest
+
+
+# Build
+##############################################################################
+
+
+.PHONY: build
+build:  ## Build the app
+	go build -o $(BINARY) $(ENTRY_POINT)
+
 
 # Lint
 ##############################################################################
