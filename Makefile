@@ -125,13 +125,16 @@ go-mod-tidy:  ## Use 'go mod tidy' utility as formatter
 ##############################################################################
 
 
+.PHONY: test
+test: tests  ## Alias for 'tests'
+
 .PHONY: tests
 tests:  ## Unit tests for Go
 	@echo -e
 	@echo -e "$(BLUE)Applying go test..."
 	@echo -e "$(GREEN)=================$(RESET)"
 	@echo -e
-	go test -tags=unit -timeout 30s -short -v
+	go test -tags=unit -timeout 30s -short -v .\...
 	@echo -e
 
 
